@@ -2,6 +2,25 @@
 
 #[macro_use] extern crate static_assertions;
 
+pub use runtime::{
+  CudaError,
+  CudaResult,
+  CudaDevice,
+  CudaStream,
+  CudaEvent,
+  CudaEventStatus,
+  CudaMemcpyKind,
+  cuda_alloc_host,
+  cuda_alloc_device,
+  cuda_free_device,
+  cuda_memset,
+  cuda_memset_async,
+  cuda_memcpy,
+  cuda_memcpy_async,
+  cuda_memcpy_2d_async,
+  cuda_memcpy_peer_async,
+};
+
 pub mod ffi;
 pub mod runtime;
 
