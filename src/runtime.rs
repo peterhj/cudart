@@ -129,6 +129,7 @@ impl CudaDevice {
   }
 }
 
+#[derive(Debug)]
 pub struct CudaStream {
   ptr:  cudaStream_t,
 }
@@ -205,6 +206,7 @@ pub enum CudaEventStatus {
   NotReady,
 }
 
+#[derive(Debug)]
 pub struct CudaEvent {
   ptr:  cudaEvent_t,
 }
