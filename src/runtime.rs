@@ -301,15 +301,6 @@ impl CudaEvent {
   }
 }
 
-pub unsafe fn cuda_alloc_host<T>(len: usize) -> CudaResult<*mut T> where T: Copy + 'static {
-  let mut ptr: *mut c_void = null_mut();
-  let size = len * size_of::<T>();
-  match cudaMallocHost(&mut ptr as *mut *mut c_void, size) {
-    cudaError_cudaSuccess => Ok(ptr as *mut T),
-    e => Err(CudaError(e)),
-  }
-}
-
 pub unsafe fn cuda_alloc_device<T>(len: usize) -> CudaResult<*mut T> where T: Copy + 'static {
   let mut dptr: *mut c_void = null_mut();
   let size = len * size_of::<T>();
@@ -319,8 +310,24 @@ pub unsafe fn cuda_alloc_device<T>(len: usize) -> CudaResult<*mut T> where T: Co
   }
 }
 
+pub unsafe fn cuda_alloc_host<T>(len: usize) -> CudaResult<*mut T> where T: Copy + 'static {
+  let mut ptr: *mut c_void = null_mut();
+  let size = len * size_of::<T>();
+  match cudaMallocHost(&mut ptr as *mut *mut c_void, size) {
+    cudaError_cudaSuccess => Ok(ptr as *mut T),
+    e => Err(CudaError(e)),
+  }
+}
+
 pub unsafe fn cuda_free_device<T>(dptr: *mut T) -> CudaResult<()> where T: Copy + 'static {
   match cudaFree(dptr as *mut c_void) {
+    cudaError_cudaSuccess => Ok(()),
+    e => Err(CudaError(e)),
+  }
+}
+
+pub unsafe fn cuda_free_host<T>(ptr: *mut T) -> CudaResult<()> where T: Copy + 'static {
+  match cudaFreeHost(ptr as *mut c_void) {
     cudaError_cudaSuccess => Ok(()),
     e => Err(CudaError(e)),
   }
