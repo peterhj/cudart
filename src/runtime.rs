@@ -174,6 +174,10 @@ impl CudaStream {
     self.ptr
   }
 
+  pub fn ptr_eq(&self, other: &CudaStream) -> bool {
+    self.ptr == other.ptr
+  }
+
   pub fn add_callback(&mut self, callback: extern "C" fn (stream: cudaStream_t, status: cudaError_t, user_data: *mut c_void), user_data: *mut c_void) -> CudaResult<()> {
     unsafe {
       match cudaStreamAddCallback(self.ptr, Some(callback), user_data, 0) {
@@ -262,6 +266,10 @@ impl CudaEvent {
 
   pub unsafe fn as_mut_ptr(&mut self) -> cudaEvent_t {
     self.ptr
+  }
+
+  pub fn ptr_eq(&self, other: &CudaEvent) -> bool {
+    self.ptr == other.ptr
   }
 
   pub fn query(&mut self) -> CudaResult<CudaEventStatus> {
