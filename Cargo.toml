@@ -1,9 +1,9 @@
 [package]
 name = "cudart"
-version = "0.1.0"
+version = "0.2.0-devel"
 authors = ["Peter Jin <peterhaijin@gmail.com>"]
 license = "BSD-2-Clause"
-description = "CUDA API bindings."
+description = "CUDA runtime API wrappers."
 repository = "https://github.com/peterhj/cudart"
 keywords = ["cuda"]
 build = "build.rs"
