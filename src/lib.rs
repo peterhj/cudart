@@ -4,7 +4,7 @@
 extern crate cuda_sys;
 #[macro_use] extern crate static_assertions;
 
-pub use runtime::{
+pub use crate::runtime::{
   CudaError,
   CudaResult,
   CudaDevice,

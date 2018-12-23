@@ -1,6 +1,7 @@
 [package]
 name = "cudart"
 version = "0.2.0-devel"
+edition = "2018"
 authors = ["Peter Jin <peterhaijin@gmail.com>"]
 license = "BSD-2-Clause"
 description = "CUDA runtime API wrappers."
