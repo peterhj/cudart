@@ -1,10 +1,25 @@
+#[cfg(not(feature = "cuda_sys"))]
 use ffi::driver_types::*;
+#[cfg(not(feature = "cuda_sys"))]
 use ffi::runtime::*;
+#[cfg(feature = "cuda_sys")]
+use cuda_sys::cudart::*;
 
 use std::ffi::{CStr};
 use std::mem::{size_of, zeroed};
 use std::os::raw::{c_void, c_int, c_uint};
 use std::ptr::{null_mut};
+
+#[cfg(feature = "cuda_sys")]
+const cudaError_cudaSuccess: cudaError_t = cudaError_t::Success;
+#[cfg(feature = "cuda_sys")]
+const cudaError_cudaErrorPeerAccessAlreadyEnabled: cudaError_t = cudaError_t::PeerAccessAlreadyEnabled;
+#[cfg(feature = "cuda_sys")]
+const cudaError_cudaErrorPeerAccessNotEnabled: cudaError_t = cudaError_t::PeerAccessNotEnabled;
+#[cfg(feature = "cuda_sys")]
+const cudaError_cudaErrorCudartUnloading: cudaError_t = cudaError_t::CudartUnloading;
+#[cfg(feature = "cuda_sys")]
+const cudaError_cudaErrorNotReady: cudaError_t = cudaError_t::NotReady;
 
 #[derive(Clone, Copy, Debug)]
 pub struct CudaError(pub cudaError_t);
