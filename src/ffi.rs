@@ -7,7 +7,7 @@ include!(concat!(env!("OUT_DIR"), "/driver_bind.rs"));
 }
 
 pub mod driver_types {
-use ffi::driver::*;
+use crate::ffi::driver::*;
 include!(concat!(env!("OUT_DIR"), "/driver_types_bind.rs"));
 }
 
@@ -16,6 +16,6 @@ include!(concat!(env!("OUT_DIR"), "/libtypes_bind.rs"));
 }
 
 pub mod runtime {
-use ffi::driver_types::*;
+use crate::ffi::driver_types::*;
 include!(concat!(env!("OUT_DIR"), "/runtime_bind.rs"));
 }
