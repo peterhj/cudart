@@ -128,7 +128,7 @@ impl CudaDevice {
 
   /// Query the given attribute for the given device.
   ///
-  /// Corresponds to `cudaGetDeviceProperties`.
+  /// Corresponds to `cudaGetDeviceAttribute`.
   pub fn get_attribute(this_dev: i32, attr: cudaDeviceAttr) -> CudaResult<i32> {
     let mut value: c_int = 0;
     match unsafe { cudaDeviceGetAttribute(&mut value as *mut c_int, attr, this_dev as c_int) } {
@@ -387,7 +387,7 @@ pub enum CudaMemcpyKind {
 }
 
 impl CudaMemcpyKind {
-  #[cfg(not(feature = "cuda_sys")]
+  #[cfg(not(feature = "cuda_sys"))]
   pub fn to_raw(&self) -> cudaMemcpyKind {
     match *self {
       CudaMemcpyKind::HostToHost      => cudaMemcpyKind_cudaMemcpyHostToHost,
