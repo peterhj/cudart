@@ -2,20 +2,8 @@
 #![allow(non_upper_case_globals)]
 #![allow(non_snake_case)]
 
-pub mod driver {
-include!(concat!(env!("OUT_DIR"), "/driver_bind.rs"));
-}
-
-pub mod driver_types {
-use crate::ffi::driver::*;
-include!(concat!(env!("OUT_DIR"), "/driver_types_bind.rs"));
-}
-
-pub mod library_types {
-include!(concat!(env!("OUT_DIR"), "/libtypes_bind.rs"));
-}
-
-pub mod runtime {
-use crate::ffi::driver_types::*;
-include!(concat!(env!("OUT_DIR"), "/runtime_bind.rs"));
+pub mod cuda_runtime_api {
+use cuda_ffi_types::cuda_runtime_api::*;
+use cuda_ffi_types::driver_types::*;
+include!(concat!(env!("OUT_DIR"), "/cuda_runtime_api.rs"));
 }

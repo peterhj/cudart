@@ -1,8 +1,10 @@
 #[cfg(not(feature = "cuda_sys"))]
-use crate::ffi::driver_types::*;
-#[cfg(not(feature = "cuda_sys"))]
-use crate::ffi::runtime::*;
+use crate::ffi::cuda_runtime_api::*;
 
+#[cfg(not(feature = "cuda_sys"))]
+use cuda_ffi_types::cuda_runtime_api::*;
+#[cfg(not(feature = "cuda_sys"))]
+use cuda_ffi_types::driver_types::*;
 #[cfg(feature = "cuda_sys")]
 use cuda_sys::cudart::*;
 
