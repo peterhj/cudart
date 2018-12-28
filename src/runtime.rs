@@ -1,5 +1,5 @@
 #[cfg(not(feature = "cuda_sys"))]
-use crate::ffi::cuda_runtime_api::*;
+use crate::ffi::*;
 
 #[cfg(not(feature = "cuda_sys"))]
 use cuda_ffi_types::cuda_runtime_api::*;
