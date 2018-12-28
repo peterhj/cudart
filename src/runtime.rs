@@ -49,7 +49,8 @@ impl CudaError {
 
 pub type CudaResult<T> = Result<T, CudaError>;
 
-pub struct CudaDevice;
+#[derive(Clone, Copy, Debug)]
+pub struct CudaDevice(pub i32);
 
 impl CudaDevice {
   /// Count the number of devices.
@@ -66,31 +67,10 @@ impl CudaDevice {
     }
   }
 
-  /// Query the current device.
-  ///
-  /// Corresponds to `cudaGetDevice`.
-  pub fn get_current() -> CudaResult<i32> {
-    let mut curr_dev: c_int = 0;
-    match unsafe { cudaGetDevice(&mut curr_dev as *mut c_int) } {
-      cudaError_cudaSuccess => Ok(curr_dev),
-      e => Err(CudaError(e)),
-    }
-  }
-
-  /// Set the current device.
-  ///
-  /// Corresponds to `cudaSetDevice`.
-  pub fn set_current(this_dev: i32) -> CudaResult<()> {
-    match unsafe { cudaSetDevice(this_dev as c_int) } {
-      cudaError_cudaSuccess => Ok(()),
-      e => Err(CudaError(e)),
-    }
-  }
-
   /// Reset the current device.
   ///
   /// Corresponds to `cudaDeviceReset`.
-  pub fn reset() -> CudaResult<()> {
+  pub fn reset_current() -> CudaResult<()> {
     match unsafe { cudaDeviceReset() } {
       cudaError_cudaSuccess => Ok(()),
       e => Err(CudaError(e)),
@@ -100,7 +80,7 @@ impl CudaDevice {
   /// Synchronize all work on the current device.
   ///
   /// Corresponds to `cudaDeviceSynchronize`.
-  pub fn synchronize() -> CudaResult<()> {
+  pub fn synchronize_current() -> CudaResult<()> {
     match unsafe { cudaDeviceSynchronize() } {
       cudaError_cudaSuccess => Ok(()),
       e => Err(CudaError(e)),
@@ -110,8 +90,29 @@ impl CudaDevice {
   /// Set flags for the current device.
   ///
   /// Corresponds to `cudaSetDeviceFlags`.
-  pub fn set_flags(flags: u32) -> CudaResult<()> {
+  pub fn set_flags_current(flags: u32) -> CudaResult<()> {
     match unsafe { cudaSetDeviceFlags(flags as c_uint) } {
+      cudaError_cudaSuccess => Ok(()),
+      e => Err(CudaError(e)),
+    }
+  }
+
+  /// Query the current device.
+  ///
+  /// Corresponds to `cudaGetDevice`.
+  pub fn get_current() -> CudaResult<CudaDevice> {
+    let mut curr_dev: c_int = 0;
+    match unsafe { cudaGetDevice(&mut curr_dev as *mut c_int) } {
+      cudaError_cudaSuccess => Ok(CudaDevice(curr_dev)),
+      e => Err(CudaError(e)),
+    }
+  }
+
+  /// Set the current device.
+  ///
+  /// Corresponds to `cudaSetDevice`.
+  pub fn set_current(&self) -> CudaResult<()> {
+    match unsafe { cudaSetDevice(self.0 as c_int) } {
       cudaError_cudaSuccess => Ok(()),
       e => Err(CudaError(e)),
     }
@@ -120,9 +121,9 @@ impl CudaDevice {
   /// Query the `cudaDeviceProp` properties struct for the given device.
   ///
   /// Corresponds to `cudaGetDeviceProperties`.
-  pub fn get_properties(this_dev: i32) -> CudaResult<cudaDeviceProp> {
+  pub fn get_properties(&self) -> CudaResult<cudaDeviceProp> {
     let mut prop: cudaDeviceProp = unsafe { zeroed() };
-    match unsafe { cudaGetDeviceProperties(&mut prop as *mut cudaDeviceProp, this_dev as c_int) } {
+    match unsafe { cudaGetDeviceProperties(&mut prop as *mut cudaDeviceProp, self.0 as c_int) } {
       cudaError_cudaSuccess => Ok(prop),
       e => Err(CudaError(e)),
     }
@@ -131,21 +132,20 @@ impl CudaDevice {
   /// Query the given attribute for the given device.
   ///
   /// Corresponds to `cudaGetDeviceAttribute`.
-  pub fn get_attribute(this_dev: i32, attr: cudaDeviceAttr) -> CudaResult<i32> {
+  pub fn get_attribute(&self, attr: cudaDeviceAttr) -> CudaResult<i32> {
     let mut value: c_int = 0;
-    match unsafe { cudaDeviceGetAttribute(&mut value as *mut c_int, attr, this_dev as c_int) } {
+    match unsafe { cudaDeviceGetAttribute(&mut value as *mut c_int, attr, self.0 as c_int) } {
       cudaError_cudaSuccess => Ok(value as i32),
       e => Err(CudaError(e)),
     }
   }
 
-  /// Check whether peer device access from `this_dev` to `peer_dev` can be
-  /// enabled.
+  /// Check whether peer device access to `peer_dev` can be enabled.
   ///
   /// Corresponds to `cudaDeviceCanAccessPeer`.
-  pub fn can_access_peer(this_dev: i32, peer_dev: i32) -> CudaResult<bool> {
+  pub fn can_access_peer(&self, peer_dev: i32) -> CudaResult<bool> {
     let mut access: c_int = 0;
-    match unsafe { cudaDeviceCanAccessPeer(&mut access as *mut c_int, this_dev as c_int, peer_dev as c_int) } {
+    match unsafe { cudaDeviceCanAccessPeer(&mut access as *mut c_int, self.0 as c_int, peer_dev as c_int) } {
       cudaError_cudaSuccess => Ok(access != 0),
       e => Err(CudaError(e)),
     }
@@ -155,7 +155,7 @@ impl CudaDevice {
   /// Returns whether or not peer device access was previously enabled.
   ///
   /// Corresponds to `cudaDeviceEnablePeerAccess`.
-  pub fn enable_peer_access(peer_dev: i32) -> CudaResult<bool> {
+  pub fn enable_peer_access_current(peer_dev: i32) -> CudaResult<bool> {
     match unsafe { cudaDeviceEnablePeerAccess(peer_dev as c_int, 0) } {
       cudaError_cudaSuccess => Ok(false),
       cudaError_cudaErrorPeerAccessAlreadyEnabled => Ok(true),
@@ -167,7 +167,7 @@ impl CudaDevice {
   /// Returns whether or not peer device access was previously enabled.
   ///
   /// Corresponds to `cudaDeviceDisablePeerAccess`.
-  pub fn disable_peer_access(peer_dev: i32) -> CudaResult<bool> {
+  pub fn disable_peer_access_current(peer_dev: i32) -> CudaResult<bool> {
     match unsafe { cudaDeviceDisablePeerAccess(peer_dev as c_int) } {
       cudaError_cudaSuccess => Ok(true),
       cudaError_cudaErrorPeerAccessNotEnabled => Ok(false),
