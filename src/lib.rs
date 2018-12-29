@@ -4,6 +4,7 @@
 extern crate cuda_ffi_types;
 #[cfg(feature = "cuda_sys")]
 extern crate cuda_sys;
+#[cfg(feature = "cuda_sys")]
 #[macro_use] extern crate static_assertions;
 
 pub use crate::runtime::{
