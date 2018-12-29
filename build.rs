@@ -85,6 +85,9 @@ fn main() {
     .whitelist_function("cudaGraphicsResourceSetMapFlags")
     .whitelist_function("cudaGraphicsUnmapResources")
     .whitelist_function("cudaGraphicsUnregisterResource")
+    // Version management.
+    .whitelist_function("cudaDriverGetVersion")
+    .whitelist_function("cudaRuntimeGetVersion")
     .generate()
     .expect("bindgen failed to generate runtime bindings")
     .write_to_file(out_dir.join("cuda_runtime_api.rs"))

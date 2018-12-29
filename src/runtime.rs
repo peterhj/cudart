@@ -49,6 +49,28 @@ impl CudaError {
 
 pub type CudaResult<T> = Result<T, CudaError>;
 
+pub fn get_driver_version() -> CudaResult<i32> {
+  let mut version: c_int = -1;
+  match unsafe { cudaDriverGetVersion(&mut version as *mut c_int) } {
+    cudaError_cudaSuccess => {
+      assert!(version >= 0);
+      Ok(version)
+    }
+    e => Err(CudaError(e)),
+  }
+}
+
+pub fn get_runtime_version() -> CudaResult<i32> {
+  let mut version: c_int = -1;
+  match unsafe { cudaRuntimeGetVersion(&mut version as *mut c_int) } {
+    cudaError_cudaSuccess => {
+      assert!(version >= 0);
+      Ok(version)
+    }
+    e => Err(CudaError(e)),
+  }
+}
+
 #[derive(Clone, Copy, Debug)]
 pub struct CudaDevice(pub i32);
 

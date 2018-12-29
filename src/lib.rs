@@ -24,6 +24,8 @@ pub use crate::runtime::{
   cuda_memcpy_async,
   cuda_memcpy_2d_async,
   cuda_memcpy_peer_async,
+  get_driver_version,
+  get_runtime_version,
 };
 
 #[cfg(not(feature = "cuda_sys"))]
