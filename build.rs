@@ -1,11 +1,9 @@
 #[cfg(feature = "fresh")]
 extern crate bindgen;
 
-#[cfg(feature = "fresh")]
 use std::env;
 #[cfg(feature = "fresh")]
 use std::fs;
-#[cfg(feature = "fresh")]
 use std::path::{PathBuf};
 
 #[cfg(all(
@@ -39,13 +37,18 @@ fn main() {
     )
 ))]
 fn main() {
+  let cuda_dir = PathBuf::from(
+      env::var("CUDA_HOME")
+        .or_else(|_| env::var("CUDA_PATH"))
+        .unwrap_or_else(|_| "/usr/local/cuda".to_owned())
+  );
+  let cuda_lib_dir = cuda_dir.join("lib64");
   println!("cargo:rustc-link-lib=cudart");
+  println!("cargo:rustc-link-search=native={}", cuda_lib_dir.display());
 }
 
 #[cfg(feature = "fresh")]
 fn main() {
-  println!("cargo:rustc-link-lib=cudart");
-
   let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
   let cuda_dir = PathBuf::from(
       env::var("CUDA_HOME")
@@ -53,6 +56,9 @@ fn main() {
         .unwrap_or_else(|_| "/usr/local/cuda".to_owned())
   );
   let cuda_include_dir = cuda_dir.join("include");
+  let cuda_lib_dir = cuda_dir.join("lib64");
+  println!("cargo:rustc-link-lib=cudart");
+  println!("cargo:rustc-link-search=native={}", cuda_lib_dir.display());
 
   #[cfg(feature = "cuda_6_5")]
   let a_cuda_version_feature_must_be_enabled = "v6_5";

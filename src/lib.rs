@@ -1,7 +1,7 @@
 #![allow(non_upper_case_globals)]
 
 #[cfg(not(feature = "cuda_sys"))]
-extern crate cuda_ffi_types;
+extern crate cuda_api_types;
 #[cfg(feature = "cuda_sys")]
 extern crate cuda_sys;
 #[cfg(feature = "cuda_sys")]

@@ -7,8 +7,8 @@ pub use self::v::cuda_runtime_api::*;
 #[cfg(feature = "cuda_8_0")]
 mod v {
   pub mod cuda_runtime_api {
-    use cuda_ffi_types::cuda_runtime_api::*;
-    use cuda_ffi_types::driver_types::*;
+    use cuda_api_types::cuda_runtime_api::*;
+    use cuda_api_types::driver_types::*;
     include!("v8_0/_cuda_runtime_api.rs");
   }
 }
@@ -16,8 +16,8 @@ mod v {
 #[cfg(feature = "cuda_9_0")]
 mod v {
   pub mod cuda_runtime_api {
-    use cuda_ffi_types::cuda_runtime_api::*;
-    use cuda_ffi_types::driver_types::*;
+    use cuda_api_types::cuda_runtime_api::*;
+    use cuda_api_types::driver_types::*;
     include!("v9_0/_cuda_runtime_api.rs");
   }
 }
@@ -25,8 +25,8 @@ mod v {
 #[cfg(feature = "cuda_9_2")]
 mod v {
   pub mod cuda_runtime_api {
-    use cuda_ffi_types::cuda_runtime_api::*;
-    use cuda_ffi_types::driver_types::*;
+    use cuda_api_types::cuda_runtime_api::*;
+    use cuda_api_types::driver_types::*;
     include!("v9_2/_cuda_runtime_api.rs");
   }
 }
