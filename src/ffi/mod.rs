@@ -30,3 +30,12 @@ mod v {
     include!("v9_2/_cuda_runtime_api.rs");
   }
 }
+
+#[cfg(feature = "cuda_10_0")]
+mod v {
+  pub mod cuda_runtime_api {
+    use cuda_api_types::cuda_runtime_api::*;
+    use cuda_api_types::driver_types::*;
+    include!("v10_0/_cuda_runtime_api.rs");
+  }
+}

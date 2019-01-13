@@ -29,7 +29,7 @@ cuda_gte_10_0   = []
 cuda_sys        = ["cuda_8_0", "cuda-sys", "static_assertions"]
 
 [build-dependencies]
-bindgen = { version = "^0.45", optional = true }
+bindgen = { version = "^0.46", optional = true }
 
 [dependencies]
 cuda_api_types = { git = "https://github.com/peterhj/cuda_api_types" }

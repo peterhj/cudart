@@ -78,9 +78,11 @@ fn main() {
   let a_cuda_version_feature_must_be_enabled = "v10_0";
   let v = a_cuda_version_feature_must_be_enabled;
 
-  let gensrc_dir = manifest_dir.join("src").join("ffi").join(v);
-  fs::create_dir(&gensrc_dir).ok();
+  let gensrc_dir = manifest_dir.join("gensrc").join("ffi").join(v);
+  println!("cargo:rerun-if-changed={}", gensrc_dir.display());
+  fs::create_dir_all(&gensrc_dir).ok();
 
+  println!("cargo:rerun-if-changed={}", gensrc_dir.join("_cuda_runtime_api.rs").display());
   fs::remove_file(gensrc_dir.join("_cuda_runtime_api.rs")).ok();
   bindgen::Builder::default()
     .clang_arg(format!("-I{}", cuda_include_dir.as_os_str().to_str().unwrap()))
@@ -156,6 +158,7 @@ fn main() {
     // Version management.
     .whitelist_function("cudaDriverGetVersion")
     .whitelist_function("cudaRuntimeGetVersion")
+    .rustfmt_bindings(true)
     .generate()
     .expect("bindgen failed to generate runtime bindings")
     .write_to_file(gensrc_dir.join("_cuda_runtime_api.rs"))
